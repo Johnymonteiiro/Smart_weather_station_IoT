@@ -100,6 +100,7 @@ monitor_app/
 
 - João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
 - Abraão Sacaia [@AbraaoSacaia](https://github.com/AbraaoSacaia)
+- Marcos Vinicius [@MarcosVinicius](https://github.com/Delemos05)
 
 ## Conclusão
 

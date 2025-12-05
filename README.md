@@ -45,3 +45,4 @@ O projeto está preparado para enviar dados para painéis web ou aplicativos mó
 
 - João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
 - Abraão Sacaia [@AbraaoSacaia](https://github.com/AbraaoSacaia)
+- Marcos Vinicius [@MarcosVinicius](https://github.com/Delemos05)

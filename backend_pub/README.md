@@ -138,6 +138,7 @@ Fotos do protótipo físico montado com ESP32, DHT11 e FC‑37, indicando ligaç
 
 - João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
 - Abraão Sacaia [@AbraaoSacaia](https://github.com/AbraaoSacaia)
+- Marcos Vinicius [@MarcosVinicius](https://github.com/Delemos05)
 
 ## Conclusão
 
