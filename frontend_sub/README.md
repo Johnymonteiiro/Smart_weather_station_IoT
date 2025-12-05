@@ -99,8 +99,7 @@ monitor_app/
 ## Contribuidores
 
 - João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
-- João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
-- João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
+- Abraão Sacaia [@AbraaoSacaia](https://github.com/AbraaoSacaia)
 
 ## Conclusão
 
