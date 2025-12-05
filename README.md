@@ -39,3 +39,9 @@ O projeto está preparado para enviar dados para painéis web ou aplicativos mó
 * 1x Sensor BMP280
 * 1x Buzzer ou LEDs de alerta
 * Broker MQTT
+
+---
+## Contribuidores
+
+- João José [@Johnymonteiiro](https://github.com/Johnymonteiiro)
+- Abraão Sacaia [@AbraaoSacaia](https://github.com/AbraaoSacaia)
