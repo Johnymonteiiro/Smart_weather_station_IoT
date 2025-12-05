@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Dashboard</title>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <nav class="sidebar" id="sidebar">
+        <div class="logo">
+          <div class="logo-icon"><i class="fa-solid fa-microchip"></i></div>
+          <span>IoT Monitor Admin</span>
+        </div>
+
+        <div class="menu-label">MENU PRINCIPAL</div>
+        <ul class="nav-links">
+          <li class="active" onclick="navigate('home')">
+            <a href="#">
+              <i class="fa-solid fa-border-all"></i> <span>Dashboard</span>
+            </a>
+          </li>
+          <li onclick="navigate('settings')">
+            <a href="#">
+              <i class="fa-solid fa-gear"></i> <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <div class="connection-status">
+            <div class="led" id="connection-led"></div>
+            <span id="connection-text">Conectando...</span>
+          </div>
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <section id="home" class="page active">
+          <div class="page-header">
+            <div>
+              <h1>Visão Geral</h1>
+              <p>Última atualização: <span id="last-update">--:--:--</span></p>
+            </div>
+            <div class="controls">
+              <button
+                class="btn-icon"
+                onclick="togglePause()"
+                title="Pausar/Retomar"
+              >
+                <i class="fa-solid fa-pause" id="pause-icon"></i>
+              </button>
+              <select id="refresh-rate" onchange="updateIntervalTime()">
+                <option value="1000">1s</option>
+                <option value="2000">2s</option>
+                <option value="5000" selected>5s</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cards-grid">
+            <div class="card status-card">
+              <div class="card-icon-bg"><i class="fa-solid fa-wifi"></i></div>
+              <div class="card-content">
+                <span class="status-badge" id="badge-wifi">-</span>
+                <h3>Status da Conexão</h3>
+                <h2 id="status-wifi">-</h2>
+                <small>Wi-Fi Signal: <span id="wifi-signal">--</span></small>
+              </div>
+            </div>
+            <div class="card status-card">
+              <div class="card-icon-bg"><i class="fa-solid fa-server"></i></div>
+              <div class="card-content">
+                <span class="status-badge gray" id="badge-ip">-</span>
+                <h3>IP Atual</h3>
+                <h2 id="status-ip">-</h2>
+                <small>Gateway: <span id="status-gateway">--</span></small>
+              </div>
+            </div>
+            <div class="card status-card">
+              <div class="card-icon-bg">
+                <i class="fa-solid fa-tower-broadcast"></i>
+              </div>
+              <div class="card-content">
+                <span class="status-badge gray" id="badge-mqtt">QoS --</span>
+                <h3>Status MQTT</h3>
+                <h2 id="status-mqtt">-</h2>
+                <small>Broker: <span id="mqtt-broker">--</span></small>
+              </div>
+            </div>
+            <div class="card status-card">
+              <div class="card-icon-bg">
+                <i class="fa-regular fa-clock"></i>
+              </div>
+              <div class="card-content">
+                <span class="status-badge green" id="badge-uptime"
+                  >Running</span
+                >
+                <h3>Uptime</h3>
+                <h2 id="status-uptime">-</h2>
+                <small>Boot Count: <span id="boot-count">--</span></small>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-main-grid">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3>Tráfego de Mensagens MQTT</h3>
+                <i class="fa-solid fa-ellipsis"></i>
+              </div>
+              <div class="chart-container">
+                <canvas id="mqttChart"></canvas>
+              </div>
+            </div>
+
+            <div class="card logs-card">
+              <div class="card-header">
+                <h3>Logs da Aplicação</h3>
+                <a href="#" class="link-action">Ver todos</a>
+              </div>
+              <div class="log-list-container">
+                <ul class="log-list" id="app-log-body"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="settings" class="page">
+          <div class="page-header">
+            <div>
+              <h1>Configurações do Sistema</h1>
+              <p>Ajuste os parâmetros de rede e MQTT do ESP32</p>
+            </div>
+          </div>
+
+          <div class="settings-wrapper">
+            <div class="card form-card">
+              <div class="card-header-simple">
+                <h3>Rede Wi-Fi</h3>
+              </div>
+              <div class="form-row">
+                <div class="form-group half">
+                  <label
+                    ><i class="fa-solid fa-wifi"></i> SSID (Nome da Rede)</label
+                  >
+                  <input
+                    type="text"
+                    id="conf_ssid"
+                    placeholder="Ex: MinhaCasa"
+                  />
+                </div>
+                <div class="form-group half">
+                  <label><i class="fa-solid fa-lock"></i> Senha</label>
+                  <div class="input-wrapper">
+                    <input
+                      type="password"
+                      id="conf_pass"
+                      placeholder="••••••••"
+                    />
+                    <i class="fa-regular fa-eye show-pass"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card form-card">
+              <div class="card-header-simple">
+                <h3>Configuração MQTT</h3>
+              </div>
+
+              <div class="form-group">
+                <label><i class="fa-solid fa-cloud"></i> Broker URL</label>
+                <input
+                  type="text"
+                  id="conf_broker"
+                  placeholder="mqtt://broker.hivemq.com"
+                />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>Porta</label>
+                  <input type="number" id="conf_port" placeholder="1883" />
+                </div>
+                <div class="form-group half">
+                  <label>QoS (Qualidade de Serviço)</label>
+                  <select id="conf_qos">
+                    <option value="0">0 - No máximo uma vez</option>
+                    <option value="1">1 - Pelo menos uma vez</option>
+                    <option value="2">2 - Exatamente uma vez</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Tópico Base</label>
+                <input type="text" id="conf_topic" value="esp/sensors" />
+              </div>
+
+              <div class="form-row">
+                <div class="form-group half">
+                  <label>Usuário (Opcional)</label>
+                  <input type="text" id="conf_user" />
+                </div>
+                <div class="form-group half">
+                  <label>Senha (Opcional)</label>
+                  <input type="password" id="conf_pass_mqtt" />
+                </div>
+              </div>
+            </div>
+
+            <div class="actions-row">
+              <button class="btn-primary" onclick="saveConfig()">
+                <i class="fa-regular fa-floppy-disk"></i> Salvar e Reiniciar
+              </button>
+              <button class="btn-danger-outline" onclick="clearConfig()">
+                <i class="fa-regular fa-trash-can"></i> Deletar dados
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

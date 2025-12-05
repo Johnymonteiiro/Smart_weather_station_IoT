@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESP32 Monitor | Dashboard</title>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <nav class="sidebar" id="sidebar">
+        <div class="logo">
+          <i class="fa-solid fa-microchip"></i>
+          <span>IoT Monitor</span>
+        </div>
+
+        <ul class="nav-links">
+          <li class="active" onclick="navigate('home')">
+            <a href="#"
+              ><i class="fa-solid fa-chart-line"></i> <span>Início</span></a
+            >
+          </li>
+          <li onclick="navigate('settings')">
+            <a href="#"
+              ><i class="fa-solid fa-sliders"></i> <span>Configurações</span></a
+            >
+          </li>
+        </ul>
+
+        <div class="status-indicator">
+          <div class="led" id="connection-led"></div>
+          <span id="connection-text">Conectando...</span>
+        </div>
+      </nav>
+
+      <main class="main-content">
+        <button class="menu-toggle" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <section id="home" class="page active">
+          <header>
+            <div class="header-text">
+              <h1>Dashboard</h1>
+              <p>Última atualização: <span id="last-update">--:--:--</span></p>
+            </div>
+            <div class="controls">
+              <button
+                class="btn-icon"
+                onclick="togglePause()"
+                title="Pausar/Retomar"
+              >
+                <i class="fa-solid fa-pause" id="pause-icon"></i>
+              </button>
+              <select id="refresh-rate" onchange="updateIntervalTime()">
+                <option value="1000">1s</option>
+                <option value="2000" selected>2s</option>
+                <option value="5000">5s</option>
+              </select>
+            </div>
+          </header>
+
+          <div class="cards-grid">
+            <div class="card metric-card">
+              <div class="card-icon temp">
+                <i class="fa-solid fa-temperature-half"></i>
+              </div>
+              <div class="card-info">
+                <h3>Temperatura</h3>
+                <h2 id="val-temp">-- °C</h2>
+                <span class="delta" id="delta-temp">--</span>
+              </div>
+            </div>
+            <div class="card metric-card">
+              <div class="card-icon hum">
+                <i class="fa-solid fa-droplet"></i>
+              </div>
+              <div class="card-info">
+                <h3>Umidade</h3>
+                <h2 id="val-hum">-- %</h2>
+                <span class="delta" id="delta-hum">--</span>
+              </div>
+            </div>
+            <div class="card metric-card">
+              <div class="card-icon rain">
+                <i class="fa-solid fa-cloud-rain"></i>
+              </div>
+              <div class="card-info">
+                <h3>Chuva</h3>
+                <h2 id="val-rain">-- %</h2>
+                <span class="delta" id="delta-rain">--</span>
+              </div>
+            </div>
+            <div class="card alert-card">
+              <h3>Alertas</h3>
+              <div class="alerts-row">
+                <div id="alert-temp" class="alert-badge">--</div>
+                <div id="alert-rain" class="alert-badge">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="card chart-container">
+              <canvas id="chartTemp"></canvas>
+            </div>
+            <div class="card chart-container">
+              <canvas id="chartHum"></canvas>
+            </div>
+            <div class="card chart-container">
+              <canvas id="chartRain"></canvas>
+            </div>
+            <div class="card chart-container">
+              <canvas id="chartCombo"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section id="settings" class="page">
+          <header>
+            <h1>Configurações do Sistema</h1>
+            <p>Ajuste os parâmetros de rede e MQTT do ESP32</p>
+          </header>
+
+          <div class="settings-wrapper">
+            <div class="card form-card">
+              <h3><i class="fa-solid fa-wifi"></i> Rede Wi-Fi</h3>
+              <div class="form-group">
+                <label>SSID (Nome da Rede)</label>
+                <input type="text" id="conf_ssid" placeholder="Ex: MinhaCasa" />
+              </div>
+              <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="conf_pass" placeholder="••••••••" />
+              </div>
+            </div>
+
+            <div class="card form-card">
+              <h3><i class="fa-solid fa-cloud"></i> Configuração MQTT</h3>
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label>Broker URL</label>
+                  <input
+                    type="text"
+                    id="conf_broker"
+                    placeholder="mqtt://broker.hivemq.com"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Porta</label>
+                  <input type="number" id="conf_port" placeholder="1883" />
+                </div>
+                <div class="form-group">
+                  <label>QoS (Qualidade de Serviço)</label>
+                  <select id="conf_qos">
+                    <option value="0">0 - No máximo uma vez</option>
+                    <option value="1">1 - Pelo menos uma vez</option>
+                    <option value="2">2 - Exatamente uma vez</option>
+                  </select>
+                </div>
+                <div class="form-group full-width">
+                  <label>Tópico Base</label>
+                  <input type="text" id="conf_topic" value="esp/sensors" />
+                </div>
+                <div class="form-group">
+                  <label>Usuário (Opcional)</label>
+                  <input type="text" id="conf_user" />
+                </div>
+                <div class="form-group">
+                  <label>Senha (Opcional)</label>
+                  <input type="password" id="conf_pass_mqtt" />
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn-primary" onclick="saveConfig()">
+                <i class="fa-solid fa-save"></i> Salvar e Reiniciar
+              </button>
+              <button class="btn-danger" onclick="clearConfig()">
+                <i class="fa-solid fa-trash"></i> Deletar os dados
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

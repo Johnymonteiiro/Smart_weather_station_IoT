@@ -1,0 +1,39 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.espIdfPathWin": "C:\\Users\\Johny\\esp\\v5.5.1\\esp-idf",
+    "idf.pythonInstallPath": "C:\\Users\\Johny\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
+    "idf.openOcdConfigs": [
+        "board/esp32-wrover-kit-3.3v.cfg"
+    ],
+    "idf.toolsPathWin": "C:\\Users\\Johny\\.espressif",
+    "C_Cpp.errorSquiggles": "disabled",
+    "idf.flashType": "UART",
+    "idf.portWin": "COM5",
+    "files.associations": {
+        ".sequelizerc": "javascript",
+        ".stylelintrc": "json",
+        "*.tsx": "typescriptreact",
+        ".env.*": "dotenv",
+        ".prettierrc": "json",
+        "*.css": "css",
+        "bitset": "cpp",
+        "chrono": "cpp",
+        "cmath": "cpp",
+        "string": "cpp",
+        "random": "cpp",
+        "format": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "sstream": "cpp",
+        "regex": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "*.inc": "cpp",
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "complex": "cpp",
+        "netfwd": "cpp"
+    }
+}
